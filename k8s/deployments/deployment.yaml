@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: image-store-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: image-store
+  template:
+    metadata:
+      labels:
+        app: image-store
+    spec:
+      containers:
+        - name: image-store-container
+          image: deepacks/cashero_image_store:arm64
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3002
+          volumeMounts:
+            - name: db-volume
+              mountPath: /app/db
+            - name: upload-volume
+              mountPath: /app/uploads
+      volumes:
+        - name: db-volume
+          persistentVolumeClaim:
+            claimName: db-pvc
+        - name: upload-volume
+          persistentVolumeClaim:
+            claimName: upload-pvc

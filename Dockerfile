@@ -26,6 +26,6 @@ RUN mkdir /uploads
 
 EXPOSE 3001
 
-VOLUME [ "/app/uploads" ]
+VOLUME [ "/app/db", "/app/uploads" ]
 
 CMD ["node", "dist/main"]
