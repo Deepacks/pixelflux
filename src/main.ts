@@ -16,10 +16,10 @@ app.post(
   '/image/upload',
   upload.single('image'),
   catcher(async (req, res) => {
-    const image = await webp(req.file)
+    const { image, blurhash } = await webp(req.file)
     imagesDB.insert(image)
 
-    res.status(200).json({ image })
+    res.status(200).json({ image, blurhash })
   }),
 )
 
@@ -37,10 +37,10 @@ app.put(
       }
 
       await unlinker(oldImage)
-      const image = await webp(req.file)
+      const { image, blurhash } = await webp(req.file)
       imagesDB.update(image, oldImage)
 
-      res.status(200).json({ image })
+      res.status(200).json({ image, blurhash })
     },
     async (req) => unlinker(req.file),
   ),
