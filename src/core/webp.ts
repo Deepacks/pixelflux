@@ -7,7 +7,7 @@ const webp = async (file: Express.Multer.File) => {
   const webPath = `${parse(file.filename).name}.webp`
 
   await sharp(file.path)
-    .webp({ quality: 100 })
+    .webp({ quality: 50 })
     .toFile(`${outputPath}/${webPath}`)
 
   await unlink(file.path)
