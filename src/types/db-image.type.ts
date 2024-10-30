@@ -1,3 +1,4 @@
 export interface DBImage {
-  image: string
+  name: string
+  blurhash: string
 }

@@ -16,10 +16,10 @@ app.post(
   '/image/upload',
   upload.single('image'),
   catcher(async (req, res) => {
-    const { image, blurhash } = await processImage(req.file)
-    imagesDB.insert(image)
+    const newImage = await processImage(req.file)
+    imagesDB.insert(newImage)
 
-    res.status(200).json({ image, blurhash })
+    res.status(200).json(newImage)
   }),
 )
 
@@ -37,10 +37,10 @@ app.put(
       }
 
       await unlinker(oldImage)
-      const { image, blurhash } = await processImage(req.file)
-      imagesDB.update(image, oldImage)
+      const newImage = await processImage(req.file, oldImage)
+      imagesDB.update(newImage, oldImage)
 
-      res.status(200).json({ image, blurhash })
+      res.status(200).json(newImage)
     },
     async (req) => unlinker(req.file),
   ),

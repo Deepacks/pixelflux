@@ -10,30 +10,32 @@ class DBStatic {
     this.db = new Database(join(__dirname, '../..', '/db/images.db'))
     this.db.exec(`
         CREATE TABLE IF NOT EXISTS images (
-            image TEXT PRIMARY KEY
+            name TEXT PRIMARY KEY,
+            blurhash TEXT
         );
     `)
   }
 
-  findAll(): string[] {
-    const images = this.db
-      .prepare('SELECT image FROM images')
+  findAll(): DBImage[] {
+    return this.db
+      .prepare('SELECT name, blurhash FROM images')
       .all() as DBImage[]
-    return images.map(({ image }) => image)
   }
 
-  insert(image: string): void {
-    this.db.prepare('INSERT INTO images (image) VALUES (?)').run(image)
-  }
-
-  update(newImage: string, oldImage: string): void {
+  insert({ name, blurhash }: DBImage): void {
     this.db
-      .prepare('UPDATE images SET image = ? WHERE image = ?')
-      .run(newImage, oldImage)
+      .prepare('INSERT INTO images (name, blurhash) VALUES (?, ?)')
+      .run(name, blurhash)
   }
 
-  delete(image: string): void {
-    this.db.prepare('DELETE FROM images WHERE image = ?').run(image)
+  update({ name, blurhash }: DBImage, oldImage: string): void {
+    this.db
+      .prepare('UPDATE images SET name = ?, blurhash = ? WHERE name = ?')
+      .run(name, blurhash, oldImage)
+  }
+
+  delete(name: string): void {
+    this.db.prepare('DELETE FROM images WHERE name = ?').run(name)
   }
 }
 
