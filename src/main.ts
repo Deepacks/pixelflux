@@ -5,7 +5,7 @@ import catcher from './utils/catcher'
 import unlinker from './utils/unlinker'
 import imagesDB from './core/imagesDB'
 import upload from './core/upload'
-import webp from './core/webp'
+import processImage from './core/processImage'
 
 const app = express()
 
@@ -16,7 +16,7 @@ app.post(
   '/image/upload',
   upload.single('image'),
   catcher(async (req, res) => {
-    const { image, blurhash } = await webp(req.file)
+    const { image, blurhash } = await processImage(req.file)
     imagesDB.insert(image)
 
     res.status(200).json({ image, blurhash })
@@ -37,7 +37,7 @@ app.put(
       }
 
       await unlinker(oldImage)
-      const { image, blurhash } = await webp(req.file)
+      const { image, blurhash } = await processImage(req.file)
       imagesDB.update(image, oldImage)
 
       res.status(200).json({ image, blurhash })
