@@ -3,8 +3,8 @@ import { unlink } from 'fs/promises'
 import { parse, join } from 'path'
 import sharp from 'sharp'
 
-const processImage = async (file: Express.Multer.File) => {
-  const webPath = `${parse(file.filename).name}.webp`
+const processImage = async (file: Express.Multer.File, oldImage?: string) => {
+  const webPath = oldImage ?? `${parse(file.filename).name}.webp`
   const newPath = join(file.destination, webPath)
 
   await sharp(file.path).webp({ quality: 50 }).toFile(newPath)
@@ -25,7 +25,7 @@ const processImage = async (file: Express.Multer.File) => {
 
   await unlink(file.path)
 
-  return { image: webPath, blurhash }
+  return { name: webPath, blurhash }
 }
 
 export default processImage
