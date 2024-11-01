@@ -28,10 +28,10 @@ class DBStatic {
       .run(name, blurhash)
   }
 
-  update({ name, blurhash }: DBImage, oldImage: string): void {
+  update({ name, blurhash }: DBImage): void {
     this.db
-      .prepare('UPDATE images SET name = ?, blurhash = ? WHERE name = ?')
-      .run(name, blurhash, oldImage)
+      .prepare('UPDATE images SET blurhash = ? WHERE name = ?')
+      .run(blurhash, name)
   }
 
   delete(name: string): void {

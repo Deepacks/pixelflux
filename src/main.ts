@@ -25,20 +25,20 @@ app.post(
 
 // Upload replacement image
 app.put(
-  '/image/upload',
+  '/image/upload/:name',
   upload.single('image'),
   catcher(
     async (req, res) => {
-      const oldImage = req.query.image as string
-      if (!oldImage) {
+      const name = req.params.name as string
+      if (!name) {
         unlinker(req.file)
         res.status(400).send('You must provide a valid image')
         return
       }
 
-      await unlinker(oldImage)
-      const newImage = await processImage(req.file, oldImage)
-      imagesDB.update(newImage, oldImage)
+      await unlinker(name)
+      const newImage = await processImage(req.file, name)
+      imagesDB.update(newImage)
 
       res.status(200).json(newImage)
     },
@@ -58,15 +58,15 @@ app.get(
 
 // Delete image
 app.delete(
-  '/image',
+  '/image/:name',
   catcher(async (req, res) => {
-    const image = req.query.image as string
-    if (!image) {
-      res.status(400).send('You must provide a valid image')
+    const name = req.params.name as string
+    if (!name) {
+      res.status(400).send('You must provide a valid image name')
     }
 
-    await unlinker(image)
-    imagesDB.delete(image)
+    await unlinker(name)
+    imagesDB.delete(name)
 
     res.status(204).send('Ok')
   }),
