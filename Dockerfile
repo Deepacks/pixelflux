@@ -24,7 +24,7 @@ COPY --from=build /app/dist ./dist
 
 RUN mkdir /uploads
 
-EXPOSE 3001
+EXPOSE 3002
 
 VOLUME [ "/app/db", "/app/uploads" ]
 
