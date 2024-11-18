@@ -48,7 +48,7 @@ app.put(
 
 // List images
 app.get(
-  '/images',
+  '/image',
   catcher(async (_, res) => {
     const images = imagesDB.findAll()
 
@@ -72,7 +72,7 @@ app.delete(
   }),
 )
 
-app.use('/images', express.static('uploads'))
+app.use('/image', express.static('uploads'))
 
 app.listen(3002, () => {
   console.log('[server]: Server is running at http://localhost:3002')
