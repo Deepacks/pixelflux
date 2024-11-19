@@ -74,6 +74,6 @@ app.delete(
 
 app.use('/image', express.static('uploads'))
 
-app.listen(3002, () => {
-  console.log('[server]: Server is running at http://localhost:3002')
+app.listen(8421, () => {
+  console.log('[server]: Server is running at http://localhost:8421')
 })
