@@ -11,6 +11,9 @@ const app = express()
 
 app.use(morgan('short'))
 
+// Config
+const PORT = process.env.PORT ?? 8421
+
 // Upload new image
 app.post(
   '/image/upload',
@@ -74,6 +77,6 @@ app.delete(
 
 app.use('/image', express.static('uploads'))
 
-app.listen(8421, () => {
-  console.log('[server]: Server is running at http://localhost:8421')
+app.listen(PORT, () => {
+  console.log(`[server]: Server is running at http://localhost:${PORT}`)
 })
