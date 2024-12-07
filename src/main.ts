@@ -8,13 +8,14 @@ import unlinker from './utils/unlinker'
 import imagesDB from './core/imagesDB'
 import upload from './core/upload'
 import processImage from './core/processImage'
+import clacImagePath from './utils/calcImagePath'
+
+// Config
+const PORT = process.env.PORT ?? 8421
 
 const app = express()
 
 app.use(morgan('short'))
-
-// Config
-const PORT = process.env.PORT ?? 8421
 
 // Upload new image
 app.post(
@@ -37,11 +38,10 @@ app.put(
       const name = req.params.name as string
       if (!name) {
         unlinker(req.file)
-        res.status(400).send('You must provide a valid image')
+        res.status(400).send('You must provide a valid image name')
         return
       }
 
-      await unlinker(name)
       const newImage = await processImage(req.file, name)
       imagesDB.update(newImage)
 
@@ -70,13 +70,20 @@ app.delete(
       res.status(400).send('You must provide a valid image name')
     }
 
-    await unlinker(name)
+    await unlinker(name, { calcPath: true, rmdirs: true })
     imagesDB.delete(name)
 
     res.status(204).send('Ok')
   }),
 )
 
+// Serve images
+app.use('/image', (req, _, next) => {
+  const fileName = req.path.slice(1)
+  req.url = `/${clacImagePath(fileName)}/${fileName}`
+
+  next()
+})
 app.use('/image', express.static('uploads'))
 
 app.listen(PORT, () => {

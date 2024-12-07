@@ -1,13 +1,17 @@
 import Database, { type Database as IDatabase } from 'better-sqlite3'
-import { join } from 'path'
+import { mkdirSync } from 'fs'
 
-import { DBImage } from 'src/types/db-image.type'
+import { DBImage } from '../types/db-image.type'
+import { dbFile, dbPath, tempUploadsPath } from '../utils/paths'
 
 class DBStatic {
   db: IDatabase
 
   constructor() {
-    this.db = new Database(join(__dirname, '../..', '/db/images.db'))
+    mkdirSync(dbPath, { recursive: true })
+    mkdirSync(tempUploadsPath, { recursive: true })
+
+    this.db = new Database(dbFile)
     this.db.exec(`
         CREATE TABLE IF NOT EXISTS images (
             name TEXT PRIMARY KEY,
