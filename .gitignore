@@ -1,4 +1,4 @@
 dist
 node_modules
-*.webp
-*.db
+db
+uploads
